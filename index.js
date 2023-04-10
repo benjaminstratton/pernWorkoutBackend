@@ -9,6 +9,8 @@ app.use(cors())
 
 // Routes
 
+// Signup and Login
+app.use("/auth", require("./src/routes/jwtAuth"))
 
 // Listening
 app.listen(5000, () => {

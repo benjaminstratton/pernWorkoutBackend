@@ -5,6 +5,7 @@ const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
 const validInfo = require("../middlewares/validInfo");
+const authorization = require("../middlewares/authorization")
 
 // Signup
 router.post("/signup", validInfo, async (req, res) => {
@@ -63,5 +64,14 @@ router.post("/login", validInfo, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+router.get("/verify", authorization, async (req, res) => {
+  try {
+    res.json(true);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+})
 
 module.exports = router;

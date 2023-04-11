@@ -7,14 +7,15 @@ module.exports = async (req, res, next) => {
     const jwtToken = req.header("token");
     // Check for token
     if (!jwtToken) {
-      return res.status(403).json({ msg: "authorization denied" });
+      return res.status(403).json({ msg: "Authorization denied" });
     }
     // Verify token
     const verify = jwt.verify(jwtToken, process.env.JWTSECRET);
+    // Add to the user
     req.user = verify.user;
     next();
   } catch (err) {
     console.error(err.message);
-    return res.status(403).json({ msg: "authorization denied" });
+    return res.status(403).json({ msg: "Authorization denied" });
   }
 };

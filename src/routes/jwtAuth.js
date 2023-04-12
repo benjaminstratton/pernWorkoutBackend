@@ -17,7 +17,7 @@ router.post("/signup", validInfo, async (req, res) => {
       email,
     ]);
     if (user.rows.length > 0) {
-      return res.status(401).send("User already exists");
+      return res.status(401).json("User already exists");
     }
     // Hash password
     const salt = await bcrypt.genSalt(10);

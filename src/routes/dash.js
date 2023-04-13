@@ -34,7 +34,23 @@ router.post("/workout", authorization, async (req, res) => {
   }
 });
 
-// Add(update) weight and reps
+// Add & Update weight and reps
+router.put("/exercise/:id", authorization, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { weight, reps } = req.body;
+    const addSet = await pool.query(
+      "UPDATE exercise SET weight = $1, reps = $2 WHERE ex_id = $3 RETURNING *",
+      [weight, reps, id]
+    );
+    if (addSet.rows.length === 0) {
+      res.json("Failed");
+    }
+    res.json("Added Sets");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // Update workout log
 router.put("/workout/:id", authorization, async (req, res) => {

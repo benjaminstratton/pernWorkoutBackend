@@ -55,7 +55,7 @@ VALUES
 -- Testing Join (test)
 SELECT * FROM users AS u LEFT JOIN workout_log AS w ON u.user_id = w.user_id LEFT JOIN exercise AS e ON e.workout_id = w.workout_id WHERE u.user_id = '<UUID>';
 
--- Testing two table insertion
+-- Testing two table insertion (test)
 WITH new_log AS (
     INSERT INTO workout_log(user_id, log_title)
     VALUES ('<UUID>', 'Wednesday, April 12th')
@@ -65,5 +65,8 @@ WITH new_log AS (
 INSERT INTO exercise(workout_id, ex_name, sets)
 SELECT workout_id, 'Shoulder Press', 3 FROM new_log;
 
--- Testing update
+-- Testing Log update (test)
 UPDATE workout_log SET log_title = 'Thursday, April 13th' WHERE workout_id = 10 AND user_id = '<UUID>';
+
+-- Testing Exercise update (test)
+UPDATE exercise SET weight = '{30, 40, 50}', reps = '{12, 10, 8}' WHERE ex_id = 11;

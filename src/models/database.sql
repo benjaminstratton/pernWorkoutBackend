@@ -36,21 +36,21 @@ ex_name VARCHAR(50),
 sets INT,
 weight INT [],
 reps INT [],
-FOREIGN KEY (workout_id) REFERENCES workout_log(workout_id)
+FOREIGN KEY (workout_id) REFERENCES workout_log(workout_id) on DELETE Cascade
 );
 
 -- Insert test data (test)
 INSERT INTO workout_log(user_id, log_title)
 VALUES
-('<UUID>', 'Monday, April 10th'),
-('<UUID>', 'Tuesday, April 11th');
+('<UUID>', 'Monday, June 10th'),
+('<UUID>', 'Tuesday, June 11th');
 
 INSERT INTO exercise(workout_id, ex_name, sets, weight, reps)
 VALUES
-(1, 'Deadlift', 4, '{315, 315, 315, 315}', '{8, 8, 8, 8}'),
-(1, 'Lat Pulldown', 3, '{180, 180, 180}', '{10, 10, 10}'),
-(2, 'Bench Press', 3, '{225, 225, 225}', '{6, 6, 6}'),
-(2, 'Dips', 3, '{25, 25, 25}', '{8, 8, 8}');
+(3, 'Deadlift', 4, '{315, 315, 315, 315}', '{8, 8, 8, 8}'),
+(3, 'Lat Pulldown', 3, '{180, 180, 180}', '{10, 10, 10}'),
+(4, 'Bench Press', 3, '{225, 225, 225}', '{6, 6, 6}'),
+(4, 'Dips', 3, '{25, 25, 25}', '{8, 8, 8}');
 
 -- Testing Join (test)
 SELECT * FROM users AS u LEFT JOIN workout_log AS w ON u.user_id = w.user_id LEFT JOIN exercise AS e ON e.workout_id = w.workout_id WHERE u.user_id = '<UUID>';
@@ -70,3 +70,6 @@ UPDATE workout_log SET log_title = 'Thursday, April 13th' WHERE workout_id = 10 
 
 -- Testing Exercise update (test)
 UPDATE exercise SET weight = '{30, 40, 50}', reps = '{12, 10, 8}' WHERE ex_id = 11;
+
+-- Testing Log delete (test) craeted new constraint to cascade
+DELETE FROM workout_log WHERE workout_id = 10 AND user_id = '<UUID>';

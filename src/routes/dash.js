@@ -34,4 +34,24 @@ router.post("/workout", authorization, async (req, res) => {
   }
 });
 
+// Add(update) weight and reps
+
+// Update workout log
+router.put("/workout/:id", authorization, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+    const updateLogTitle = await pool.query(
+      "UPDATE workout_log SET log_title = $1 WHERE workout_id = $2 AND user_id = $3 RETURNING *",
+      [title, id, req.user.id]
+    );
+    if (updateLogTitle.rows.length === 0) {
+      return res.json("This log is not yours!");
+    }
+    res.json("Log updated!");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

@@ -64,3 +64,6 @@ WITH new_log AS (
 )
 INSERT INTO exercise(workout_id, ex_name, sets)
 SELECT workout_id, 'Shoulder Press', 3 FROM new_log;
+
+-- Testing update
+UPDATE workout_log SET log_title = 'Thursday, April 13th' WHERE workout_id = 10 AND user_id = '<UUID>';

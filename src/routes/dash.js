@@ -43,7 +43,7 @@ router.put("/exercise/:id", authorization, async (req, res) => {
       [weight, reps, id]
     );
     if (addSet.rows.length === 0) {
-      res.json("Failed");
+      return res.json("Failed");
     }
     res.json("Added Sets");
   } catch (err) {
@@ -78,7 +78,7 @@ router.delete("/exercise/:id", authorization, async (req, res) => {
       [id]
     );
     if (deleteExercise.rows.length === 0) {
-      res.json("Failed");
+      return res.json("Failed");
     }
     res.json("Exercise deleted!");
   } catch (err) {

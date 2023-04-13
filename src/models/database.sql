@@ -17,7 +17,7 @@ CREATE TABLE users(
 -- Insert test users (test)
 INSERT INTO users(user_name, user_email, user_password, date_of_birth, user_sex, user_height)
 VALUES
-('SoggyJake', 'soggymuffin@gmail.com', 'Benisbiggerthanme123!', '1999-12-19', 'M', 68),
+('SoggyJake', 'soggymuffin@gmail.com', 'Benisbigger123!', '1999-12-19', 'M', 68),
 ('Brorito', 'jalenrojas@gmail.com', 'Bentley123!', '2001-08-09', 'M', 66);
 
 -- Create Workout Log table
@@ -54,3 +54,13 @@ VALUES
 
 -- Testing Join (test)
 SELECT * FROM users AS u LEFT JOIN workout_log AS w ON u.user_id = w.user_id LEFT JOIN exercise AS e ON e.workout_id = w.workout_id WHERE u.user_id = '<UUID>';
+
+-- Testing two table insertion
+WITH new_log AS (
+    INSERT INTO workout_log(user_id, log_title)
+    VALUES ('<UUID>', 'Wednesday, April 12th')
+    ON CONFLICT DO NOTHING
+    RETURNING workout_id
+)
+INSERT INTO exercise(workout_id, ex_name, sets)
+SELECT workout_id, 'Shoulder Press', 3 FROM new_log;

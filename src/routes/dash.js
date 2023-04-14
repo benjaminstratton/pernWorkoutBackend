@@ -21,11 +21,10 @@ router.get("/", authorization, async (req, res) => {
 // Create workout log
 router.post("/workout", authorization, async (req, res) => {
   try {
-    console.log(req.body);
-    const { title, exercise, sets } = req.body;
+    const { title } = req.body;
     const newLog = await pool.query(
-      "WITH new_log AS (INSERT INTO workout_log(user_id, log_title) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING workout_id) INSERT INTO exercise(workout_id, ex_name, sets) SELECT workout_id, $3, $4 FROM new_log RETURNING *",
-      [req.user.id, title, exercise, sets]
+      "INSERT INTO workout_log(user_id, log_title) VALUES ($1, $2) RETURNING *",
+      [req.user.id, title]
     );
     res.json(newLog.rows[0]);
   } catch (err) {
@@ -33,19 +32,16 @@ router.post("/workout", authorization, async (req, res) => {
   }
 });
 
-// Add & Update weight and reps
-router.put("/exercise/:id", authorization, async (req, res) => {
+// Create exercise
+router.post("/exercise/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
-    const { weight, reps } = req.body;
-    const addSet = await pool.query(
-      "UPDATE exercise SET weight = $1, reps = $2 WHERE ex_id = $3 RETURNING *",
-      [weight, reps, id]
+    const { exercise, sets, weight, reps } = req.body;
+    const newExercise = await pool.query(
+      "INSERT INTO exercise(workout_id, ex_name, sets, weight, reps) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [id, exercise, sets, weight, reps]
     );
-    if (addSet.rows.length === 0) {
-      return res.json("Failed");
-    }
-    res.json("Added Sets");
+    res.json(newExercise.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -69,24 +65,25 @@ router.put("/workout/:id", authorization, async (req, res) => {
   }
 });
 
-// Delete Exercise
-router.delete("/exercise/:id", authorization, async (req, res) => {
+// Update exercise
+router.put("/exercise/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
-    const deleteExercise = await pool.query(
-      "DELETE FROM exercise WHERE ex_id = $1 RETURNING *",
-      [id]
+    const { exercise, sets, weight, reps } = req.body;
+    const addSet = await pool.query(
+      "UPDATE exercise SET exercise = $1, sets = $2, weight = $3, reps = $4 WHERE ex_id = $5 RETURNING *",
+      [exercise, sets, weight, reps, id]
     );
-    if (deleteExercise.rows.length === 0) {
+    if (addSet.rows.length === 0) {
       return res.json("Failed");
     }
-    res.json("Exercise deleted!");
+    res.json("Added Sets");
   } catch (err) {
     console.error(err.message);
   }
 });
 
-// Delete Log
+// Delete workout log
 router.delete("/workout/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,6 +95,23 @@ router.delete("/workout/:id", authorization, async (req, res) => {
       return res.json("This log is not yours!");
     }
     res.json("Log deleted!");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// Delete exercise
+router.delete("/exercise/:id", authorization, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteExercise = await pool.query(
+      "DELETE FROM exercise WHERE ex_id = $1 RETURNING *",
+      [id]
+    );
+    if (deleteExercise.rows.length === 0) {
+      return res.json("Failed");
+    }
+    res.json("Exercise deleted!");
   } catch (err) {
     console.error(err.message);
   }

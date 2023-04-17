@@ -17,6 +17,6 @@ app.use("/auth", require("./src/routes/jwtAuth"));
 app.use("/dashboard", require("./src/routes/dash"));
 
 // Listening
-app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
+app.listen(PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });

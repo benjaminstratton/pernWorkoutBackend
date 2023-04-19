@@ -40,4 +40,4 @@ nodemon
 
 ## Usage
 
-While the server is running, download and use [Postman]() to test the routes found in /src/routes. To access the dash.js routes, you will first need to acquire a token from either the login or signup route, then apply the key/value pair to the "Headers" tab.
+While the server is running, download and use [Postman](https://www.postman.com/) to test the routes found in /src/routes. To access the dash.js routes, you will first need to acquire a token from either the login or signup route, then apply the key/value pair to the "Headers" tab.
